@@ -47,6 +47,7 @@ app.get('/bands-lazy', async (req, res, next) => {
             createdAt: band.createdAt,
             updatedAt: band.updatedAt,
             // Your code here
+            musicians: await band.getMusicians({ order: [ ['firstName'] ]})
         };
         payload.push(bandData);
     }
@@ -57,6 +58,8 @@ app.get('/bands-lazy', async (req, res, next) => {
 app.get('/bands-eager', async (req, res, next) => {
     const payload = await Band.findAll({
         // Your code here
+        include: { model: Musician },
+        order: [ ['name'], [Musician, 'firstName'] ]
     });
     res.json(payload);
 });
